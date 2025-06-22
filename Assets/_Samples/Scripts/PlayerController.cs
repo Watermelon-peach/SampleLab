@@ -2,25 +2,25 @@ using UnityEngine;
 
 namespace Sample_Test
 {
-    //Àª½¼ÀÇ ÀÌµ¿À» Á¦¾îÇÏ´Â Å¬·¡½º
+    //ìœŒìŠ¨ì˜ ì´ë™ì„ ì œì–´í•˜ëŠ” í´ëž˜ìŠ¤
     public class PlayerController : MonoBehaviour
     {
         #region Variables
-        //ÂüÁ¶
-        public Rigidbody volleyball;            //¹è±¸°ø °­Ã¼
-        public GroundCheck groundCheck;         //±×¶ó¿îµå Ã¼Å© Æ®¸®°Å
+        //ì°¸ì¡°
+        public Rigidbody volleyball;            //ë°°êµ¬ê³µ ê°•ì²´
+        public GroundCheck groundCheck;         //ê·¸ë¼ìš´ë“œ ì²´í¬ íŠ¸ë¦¬ê±°
         private Transform cameraTransform;
 
-        //¹°¸®¼öÄ¡µé
-        [SerializeField] private float defaultMoveForce = 5f;   //ÀÌµ¿ Èû ±âº»°ª
-        [SerializeField] private float runForceFactor = 2f;     //´Þ¸®±â ÀÎ¼ö(°è¼ö)
-        [SerializeField] private float maxSpeed = 10f;          //ÃÖ´ë ¼Óµµ
-        private float moveForce;                                //Àª½¼¿¡ ÃÖÁ¾ÀûÀ¸·Î °¡ÇØÁö´Â Èû (move)
+        //ë¬¼ë¦¬ìˆ˜ì¹˜ë“¤
+        [SerializeField] private float defaultMoveForce = 5f;   //ì´ë™ íž˜ ê¸°ë³¸ê°’
+        [SerializeField] private float runForceFactor = 2f;     //ë‹¬ë¦¬ê¸° ì¸ìˆ˜(ê³„ìˆ˜)
+        [SerializeField] private float maxSpeed = 10f;          //ìµœëŒ€ ì†ë„
+        private float moveForce;                                //ìœŒìŠ¨ì— ìµœì¢…ì ìœ¼ë¡œ ê°€í•´ì§€ëŠ” íž˜ (move)
 
-        [SerializeField] private float jumpForce = 5f;          //Á¡ÇÁ Èû
+        [SerializeField] private float jumpForce = 5f;          //ì í”„ íž˜
         private bool isJump = false;
 
-        private Vector3 moveInput;      //ÀÌµ¿ ÀÔ·Â
+        private Vector3 moveInput;      //ì´ë™ ìž…ë ¥
 
         #endregion
 
@@ -28,22 +28,25 @@ namespace Sample_Test
         private void Start()
         {
             cameraTransform = Camera.main.transform;
+            //ì»¤ì„œ ì œì–´
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         private void Update()
         {
             transform.position = volleyball.transform.position;
-            RotateWithAspect();     //Ä«¸Þ¶ó°¡ ¹Ù¶óº¸°í ÀÖ´Â ¹æÇâÀ¸·Î
-            HandleInput();          //WASD ÀÔ·Â¹Þ±â
+            RotateWithAspect();     //ì¹´ë©”ë¼ê°€ ë°”ë¼ë³´ê³  ìžˆëŠ” ë°©í–¥ìœ¼ë¡œ
+            HandleInput();          //WASD ìž…ë ¥ë°›ê¸°
 
-            //´Þ¸®±â - °øÁß¿¡¼­ °©ÀÚ±â »¡¶óÁö¸é ¾î»öÇÏ´Ï±î ¶¥¿¡¼­¸¸ ´Þ¸± ¼ö ÀÖ°Ô
-            if (Input.GetKey(KeyCode.LeftShift) && groundCheck.IsGrounded)    //¶¥¿¡¼­ Shift ÀÔ·ÂÇÒ ½Ã
+            //ë‹¬ë¦¬ê¸° - ê³µì¤‘ì—ì„œ ê°‘ìžê¸° ë¹¨ë¼ì§€ë©´ ì–´ìƒ‰í•˜ë‹ˆê¹Œ ë•…ì—ì„œë§Œ ë‹¬ë¦´ ìˆ˜ ìžˆê²Œ
+            if (Input.GetKey(KeyCode.LeftShift) && groundCheck.IsGrounded)    //ë•…ì—ì„œ Shift ìž…ë ¥í•  ì‹œ
             {
                 Run();
             }
             else
             {
-                //ÀÌµ¿¼Óµµ Á¤»óÈ­
+                //ì´ë™ì†ë„ ì •ìƒí™”
                 moveForce = defaultMoveForce;
             }
 
@@ -62,35 +65,35 @@ namespace Sample_Test
         #endregion
 
         #region Custom Method
-        //ÀÎÇ² ¹Þ¾Æ¿À±â
+        //ì¸í’‹ ë°›ì•„ì˜¤ê¸°
         private void HandleInput()
         {
-            //WASD ÀÔ·Â
+            //WASD ìž…ë ¥
             float horizontal = Input.GetAxisRaw("Horizontal");
             float vertical = Input.GetAxisRaw("Vertical");
 
             moveInput = new Vector3(horizontal, 0f, vertical).normalized;
 
-            //Á¡ÇÁ ÀÎÇ²
-            if (Input.GetKeyDown(KeyCode.Space) && groundCheck.IsGrounded)  //¶¥¿¡¼­ Space¸¦ ÀÔ·ÂÇÒ ½Ã
+            //ì í”„ ì¸í’‹
+            if (Input.GetKeyDown(KeyCode.Space) && groundCheck.IsGrounded)  //ë•…ì—ì„œ Spaceë¥¼ ìž…ë ¥í•  ì‹œ
             {
                 isJump = true;
                 //Debug.Log(isJump);
             }
         }
 
-        //¹Þ¾Æ¿Â ÀÎÇ² °ªÀ» Åä´ë·Î Àª½¼ ±¼¸®±â
+        //ë°›ì•„ì˜¨ ì¸í’‹ ê°’ì„ í† ëŒ€ë¡œ ìœŒìŠ¨ êµ´ë¦¬ê¸°
         private void Move()
         {
             if (volleyball.linearVelocity.z > maxSpeed || volleyball.linearVelocity.x > maxSpeed)
                 return;
 
-            //·ÎÄÃ ±âÁØÀ¸·Î ¹æÇâ º¯È¯
+            //ë¡œì»¬ ê¸°ì¤€ìœ¼ë¡œ ë°©í–¥ ë³€í™˜
             Vector3 localMove = transform.TransformDirection(moveInput);
             volleyball.AddForce(localMove * moveForce, ForceMode.Force);
         }
         
-        //Ä«¸Þ¶ó°¡ ¹Ù¶óº¸´Â ¹æÇâÀ¸·Î È¸Àü (yÃà ¹«½Ã)
+        //ì¹´ë©”ë¼ê°€ ë°”ë¼ë³´ëŠ” ë°©í–¥ìœ¼ë¡œ íšŒì „ (yì¶• ë¬´ì‹œ)
         private void RotateWithAspect()
         {
             Vector3 dir = transform.position - cameraTransform.position;
@@ -100,21 +103,21 @@ namespace Sample_Test
 
         private void Run()
         {
-            //°¡ÇØÁö´Â Èû ¿¬»ê
+            //ê°€í•´ì§€ëŠ” íž˜ ì—°ì‚°
             moveForce = runForceFactor * defaultMoveForce;
-            //ºñÁÖ¾ó ÀÌÆåÆ® (Èæ¸ÕÁö etc...)
+            //ë¹„ì£¼ì–¼ ì´íŽ™íŠ¸ (í‘ë¨¼ì§€ etc...)
             //...
         }
 
-        //ÃÖ´ë¼Óµµ Á¦ÇÑ
+        //ìµœëŒ€ì†ë„ ì œí•œ
         void ClampLinearVelocity()
         {
             Vector3 velocity = volleyball.linearVelocity;
 
-            // XZ Æò¸é ¼Óµµ ÃßÃâ
+            // XZ í‰ë©´ ì†ë„ ì¶”ì¶œ
             Vector3 flatVelocity = new Vector3(velocity.x, 0f, velocity.z);
 
-            // Æò¸é ¼Óµµ°¡ max¸¦ ³Ñ¾úÀ¸¸é ÀÚ¸£±â
+            // í‰ë©´ ì†ë„ê°€ maxë¥¼ ë„˜ì—ˆìœ¼ë©´ ìžë¥´ê¸°
             if (flatVelocity.magnitude > maxSpeed)
             {
                 flatVelocity = flatVelocity.normalized * maxSpeed;
@@ -127,10 +130,10 @@ namespace Sample_Test
         private void Jump()
         {
             volleyball.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            //ºñÁÖ¾ó ÀÌÆåÆ®
+            //ë¹„ì£¼ì–¼ ì´íŽ™íŠ¸
             //...
 
-            //isJump ÃÊ±âÈ­
+            //isJump ì´ˆê¸°í™”
             isJump = false;
             //Debug.Log(isJump);
         }
@@ -140,7 +143,7 @@ namespace Sample_Test
 }
 
 /*
-25-06-20 : ÃÖ´ë¼Óµµ ½ÇÇè
-ÀÌ·Ð»ó °¡¼ÓÇÏ¸é ¹«ÇÑÁ¤ ¿Ã¶ó°¥ °Í °°Àºµ¥ ¾î´À ¼ø°£ ¼Óµµ°¡ ¾È¿Ã¶ó°¡´Â °Í °°À½ (¾Æ´Ï¸é ¸Å¿ì ´õµð°Ô ¿Ã¶ó°¡°Å³ª)
-±×·¡¼­ ¼ÓµµÁ¦ÇÑÀÌ µüÈ÷ ÇÊ¿ä¾øÀ» ¼öµµ??
+25-06-20 : ìµœëŒ€ì†ë„ ì‹¤í—˜
+ì´ë¡ ìƒ ê°€ì†í•˜ë©´ ë¬´í•œì • ì˜¬ë¼ê°ˆ ê²ƒ ê°™ì€ë° ì–´ëŠ ìˆœê°„ ì†ë„ê°€ ì•ˆì˜¬ë¼ê°€ëŠ” ê²ƒ ê°™ìŒ (ì•„ë‹ˆë©´ ë§¤ìš° ë”ë””ê²Œ ì˜¬ë¼ê°€ê±°ë‚˜)
+ê·¸ëž˜ì„œ ì†ë„ì œí•œì´ ë”±ížˆ í•„ìš”ì—†ì„ ìˆ˜ë„??
 */
